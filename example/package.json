@@ -1,0 +1,20 @@
+{
+  "name": "debonair-example",
+  "description": "examples for uses on debonair",
+  "version": "0.0.1",
+  "dependencies": {
+    "react": "^0.13.0",
+    "debonair": "^0.0.1"
+  },
+  "devDependencies": {
+    "babel": "^4.7.12",
+    "babel-core": "^4.7.12",
+    "babel-loader": "^4.2.0",
+    "react-hot-loader": "^1.2.3",
+    "webpack": "^1.7.3",
+    "webpack-dev-server": "^1.7.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

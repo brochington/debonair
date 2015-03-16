@@ -1,0 +1,18 @@
+{
+  "name": "debonair",
+  "description": "A functional way to work with inline styles",
+  "version": "0.0.1",
+  "main": "./src/main.js",
+  "dependencies": {
+    "lodash": "^3.5.0",
+    "react": "^0.13.0"
+  },
+  "devDependencies": {
+    "babel": "^4.7.12",
+    "babel-core": "^4.7.12",
+    "babel-loader": "^4.2.0",
+    "react-hot-loader": "^1.2.3",
+    "webpack": "^1.7.3",
+    "webpack-dev-server": "^1.7.0"
+  }
+}
