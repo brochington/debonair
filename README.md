@@ -8,19 +8,22 @@ npm install of example every time you update debonair. Linking is easy:
 In /debonair/debonair: 
 
 ```
-npm install
-npm link
+$ npm install
+$ npm link
 ```
 
 then in /debonair/example: 
 
 ```
-npm link debonair
-npm install
-npm start
+$ npm link debonair
+$ npm install
+$ npm start
 ```
 
-TODO:
+## Tests:
 
-- gulp build tools
-- karma, mocha, chai
+in debonair/debonair:
+
+```
+$ karma start
+```
