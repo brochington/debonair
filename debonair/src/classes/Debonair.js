@@ -1,6 +1,8 @@
+import _ from "lodash";
+
 class Debonair {
     constructor() {
-        console.log("reached the constructor");
+        this.something = "else";
     }
 }
 

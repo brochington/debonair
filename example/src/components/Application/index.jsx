@@ -1,14 +1,26 @@
 import React from "react";
-import Debonair from "debonair";
+import Boxes from "../Boxes";
+import {Debonair} from "debonair";
 
-console.log(Debonair);
+// create a new instance of Debonair.
+let debonair = new Debonair();
 
 class Application extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
+        console.log(this.context);
         return (
-            <div>Hello Brochington!</div>
+            <div>
+                <h1>Debonair Examples</h1>
+                <Boxes {...this.props} />
+            </div>
         );
     }
 };
+
+Application.propTypes = {debonair: React.PropTypes.object};
+Application.defaultProps = {debonair: debonair};
 
 export default Application;
