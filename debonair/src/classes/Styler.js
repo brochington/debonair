@@ -1,22 +1,85 @@
 import _ from "lodash";
 
-class Styler {
-    constructor() {
-        console.log("styler constructor");
-    }
-    createStyler() {
-        let styler = stylerContructor(initVal, this),
-            func = styler._getStyles;
-
-        Object.assign(func, styler);
-
-        Object.defineProperty(styler, "styler", {
-            enumerable: true,
-            value: func
-        });
-
-        return func.bind(func);
+let styleTypeHandlers = {
+    isArray(entity) {
+        return this._merge(entity);
+    },
+    isObject(entity) {
+        return entity;
+    },
+    isFunction(entity, collector) {
+        return entity(collector);
+    }, 
+    isStyler(entity, collector) {
+        return entity();
     }
 }
 
-export default Debonair;
+let determineType = entity => {
+    if(_.isArray(entity)) {return "isArray"}
+    if(entity._isStyler) {return "isStyler"}
+    else if (_.isFunction(entity)) {return "isFunction"}
+    else if (_.isObject(entity)) {return "isObject"}
+    else if(_.isString(entity)) {return "isString"}
+    return null
+} 
+
+class StandardStyler {
+    constructor(stylerInstance, ...initStyles) {
+        this._initStyles = initStyles;
+        this._stylerInstance = stylerInstance;
+    }
+    _getStyles(...args) {
+        let stylesArr = this._initStyles.concat(args);
+
+        return this._merge(stylesArr);
+    }
+    _merge(stylesArr) {
+        // TODO: optimize styles chain.
+        let styles = _.chain(stylesArr)
+            .map(entity => styleTypeHandlers[determineType(entity)].bind(this, entity))
+            .reduce((outputObj, argFunc) => {
+                _.assign(outputObj, argFunc(outputObj));
+                return outputObj;
+            }, {})
+            .value();
+
+        return styles;
+    }
+}
+
+// EnumStylers will be very quick, but will be completely immutable
+// Good for a one time evaluation of a long sequence which will not change.
+// Can still use styler methods like map, reduce, etc.
+class EnumStyler {
+    constructor(stylerInstance, ...initArgs) {
+        this._styleCache = this._merge(...initArgs);
+    }
+    _getStyles(...args) {
+
+    }
+}
+
+class Styler {
+    constructor(initConfig) {
+    }
+    //TODO: make this handle multiple args.
+    create(...initStyles) {
+        let styler = new StandardStyler(this, ...initStyles),
+            stylerFunc = styler._getStyles.bind(styler);
+
+
+        Object.defineProperty(stylerFunc, "_isStyler", {
+            value: true
+        });
+
+        return stylerFunc;
+    }
+    createEnum(initStyles) {
+        let enumStyler = new EnumStyler(initStyles, this);
+
+        return enumStyler._getStyles.bind(styler);
+    }
+}
+
+export default new Styler();

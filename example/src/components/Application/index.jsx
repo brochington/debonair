@@ -10,7 +10,6 @@ class Application extends React.Component {
         super(props);
     }
     render() {
-        console.log(this.context);
         return (
             <div>
                 <h1>Debonair Examples</h1>
