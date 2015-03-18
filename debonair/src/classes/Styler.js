@@ -15,15 +15,34 @@ let styleTypeHandlers = {
     }
 }
 
+// methods to add: 
+/*
+omit, forIn, has, findKey, assign, forOwn
+maybe: transform
+
+*/
+
+// need to do more work to make sure that filter and reject always return a style object.
 let stylerFuncNormalMethods = {
     map: "mapValues",
     reduce: "reduce",
-    filter: "filter",
+    reject: "reject"
+    // filter: "filter"
 }
 
 let stylerFuncPropsAndMethods = {
     _isStyler: true,
-    merge(...args) { return this._getStyles(...args);}
+    merge(...args) { return this._getStyles(...args);},
+    filter(filterFunc) {
+        let result = _.reduce(this._getStyles(), (accum, val, key) => {
+            if(filterFunc(val, key)) {
+                accum[key] = val;
+            }
+            return accum;
+        }, {});
+        return result;
+        // return _.transform(this._getStyles(),filterFunc);
+    }
 }
 
 let determineType = entity => {
@@ -78,7 +97,7 @@ class Styler {
         let styler = new StandardStyler(this, ...initStyles),
             stylerFunc = styler._getStyles.bind(styler);
 
-        _.each(stylerFuncNormalMethods, (lodashMethod, methodName) => {
+        _.forEach(stylerFuncNormalMethods, (lodashMethod, methodName) => {
             // let boundMethod = _[lodashMethod]()
             Object.defineProperty(stylerFunc, methodName, {
                 value: (...args) => {
@@ -87,7 +106,7 @@ class Styler {
             });
         });
 
-        _.each(stylerFuncPropsAndMethods, (propVal, propName) => {
+        _.forEach(stylerFuncPropsAndMethods, (propVal, propName) => {
             Object.defineProperty(stylerFunc, propName, {
                 value: typeof propVal === "function" ? propVal.bind(styler) : propVal
             });
