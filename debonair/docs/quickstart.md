@@ -24,7 +24,8 @@ let styler = Styler.createStyler({
     width: 200,
     padding: 20
     ...
-});```
+});
+```
 
 to use the styles of the styler, simply evaluate it. 
 
