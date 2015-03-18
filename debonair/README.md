@@ -54,31 +54,20 @@ let bigFancyBox = standardBox(
 }
 */
 ```
-
-
 ## Installation
 
-Debonair comes with an example project for easier dev work. The easiest way to get running is to link the debonair library folder to the example folder so that dev work doesn't need a new
-npm install of example every time you update debonair. Linking is easy:
+`npm install debonair`
 
-In /debonair/debonair: 
-
+In ES6: 
 ```
-$ npm install
-$ npm link
+import { Debonair, Styler } from "debonair";
 ```
-
-then in /debonair/example: 
-
+Require: 
 ```
-$ npm link debonair
-$ npm install
-$ npm start
+var Styler = require("debonair").Styler;
 ```
 
 ## Tests:
-
-in debonair/debonair:
 
 ```
 $ karma start
