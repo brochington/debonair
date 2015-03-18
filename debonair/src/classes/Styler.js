@@ -15,33 +15,32 @@ let styleTypeHandlers = {
     }
 }
 
-// methods to add: 
+// 
 /*
-omit, forIn, has, findKey, assign, forOwn
+methods to add: omit, forIn, has, findKey, assign, forOwn, reject
 maybe: transform
+create: filterByKey, filterByValue, rejectByKey, rejectByValue
 
 */
 
 // need to do more work to make sure that filter and reject always return a style object.
 let stylerFuncNormalMethods = {
-    map: "mapValues",
-    reduce: "reduce",
-    reject: "reject"
-    // filter: "filter"
+    map: "mapValues"
 }
 
 let stylerFuncPropsAndMethods = {
     _isStyler: true,
     merge(...args) { return this._getStyles(...args);},
+    reduce(reduceFunc) {
+        return _.reduce(this._getStyles(), reduceFunc, {});
+    },
     filter(filterFunc) {
-        let result = _.reduce(this._getStyles(), (accum, val, key) => {
+        return _.reduce(this._getStyles(), (accum, val, key) => {
             if(filterFunc(val, key)) {
                 accum[key] = val;
             }
             return accum;
         }, {});
-        return result;
-        // return _.transform(this._getStyles(),filterFunc);
     }
 }
 
