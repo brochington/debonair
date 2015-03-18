@@ -16,8 +16,10 @@ Debonair is a library created to assist in the creation, organization, and editi
 ```
 import { Styler } from "debonair";
 
-/* create an instance of a styler, which is just a functor that will return a react style prop compatible object.
+/* 
+create an instance of a styler, which is just a functor that will return a react style prop compatible object.
 */
+
 let standardBox = Styler.create({
     height: 100,
     width: 100
@@ -46,7 +48,7 @@ let bigFancyBox = standardBox(
     height: 300,
     width: 300,
     border: "dashed blue 3px",
-    backgroundColor: "
+    backgroundColor: "orange"
 }
 */
 ```
