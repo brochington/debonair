@@ -235,7 +235,7 @@ describe("Styler", () => {
                     accum[key] = value + 123;
                 }
                 return accum;
-            }, {});
+            });
 
             expect(reduction).to.eql({
                 height: 223,
