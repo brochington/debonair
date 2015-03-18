@@ -194,9 +194,92 @@ describe("Styler", () => {
             });
         });
     });
+    describe("styler map", () => {
+        it("should exist", () => {
+            let styler1 = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "blue"
+            });
+
+            expect(styler1.map).to.exist;    
+        });
+        it("should map over style props", () => {
+            let styler1 = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "blue"
+            });
+
+            let mappedVal = styler1.map((style, styleName, styles) => {
+                return typeof style === 'number' ? style + 400 : style;
+            });
+
+            expect(mappedVal).to.eql({
+                height: 500,
+                width: 500,
+                backgroundColor: "blue"
+            });
+        })
+    });
+    describe("styler reduce", () => {
+        it("should reduce style props", () => {
+            let styler1 = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "blue"
+            });
+
+            let reduction = styler1.reduce((accum, value, key,collection) => {
+                if(typeof value === 'number') {
+                    accum[key] = value + 123;
+                }
+                return accum;
+            }, {});
+
+            expect(reduction).to.eql({
+                height: 223,
+                width: 223
+            });
+        });
+    });
+    describe("styler merge", () => {
+        it("should merge arguments correctly", () => {
+            let styler1 = Styler.create({
+                width: 200
+            });
+
+            let mergedStyles = styler1.merge({
+                    height: 100,
+                    width: 100
+                },{
+                    backgroundColor: "orange"
+                }, 
+                currentStyles => {return {border: "solid yellow 3px", height: 400};}, 
+                styler1, 
+                [{display: "block"}, {padding: 10}, {padding: 20}]
+            );
+
+            expect(mergedStyles).to.exist;
+            expect(mergedStyles).to.eql({
+                height: 400, 
+                width: 200, 
+                backgroundColor: 'orange', 
+                border: 'solid yellow 3px', 
+                display: 'block', 
+                padding: 20
+            });
+        });
+    });
+    describe("styler filter", () => {
+        it("should filter style object", () => {
+            let styler1 = Styler.create({
+                height: 100,
+                weight: 100,
+                backgroundColor: "orange"
+            });
+
+            let filteredStyles = styler1.filter()
+        });
+    })
 });
-
-
-
-
-

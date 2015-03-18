@@ -15,13 +15,24 @@ let styleTypeHandlers = {
     }
 }
 
+let stylerFuncNormalMethods = {
+    map: "mapValues",
+    reduce: "reduce",
+    filter: "filter",
+}
+
+let stylerFuncPropsAndMethods = {
+    _isStyler: true,
+    merge(...args) { return this._getStyles(...args);}
+}
+
 let determineType = entity => {
     if(_.isArray(entity)) {return "isArray"}
     if(entity._isStyler) {return "isStyler"}
     else if (_.isFunction(entity)) {return "isFunction"}
     else if (_.isObject(entity)) {return "isObject"}
     else if(_.isString(entity)) {return "isString"}
-    return null
+    return null;
 } 
 
 class StandardStyler {
@@ -63,15 +74,26 @@ class EnumStyler {
 class Styler {
     constructor(initConfig) {
     }
-    //TODO: make this handle multiple args.
     create(...initStyles) {
         let styler = new StandardStyler(this, ...initStyles),
             stylerFunc = styler._getStyles.bind(styler);
 
-
-        Object.defineProperty(stylerFunc, "_isStyler", {
-            value: true
+        _.each(stylerFuncNormalMethods, (lodashMethod, methodName) => {
+            // let boundMethod = _[lodashMethod]()
+            Object.defineProperty(stylerFunc, methodName, {
+                value: (...args) => {
+                    return _[lodashMethod](styler._getStyles(), ...args);
+                }.bind(styler)
+            });
         });
+
+        _.each(stylerFuncPropsAndMethods, (propVal, propName) => {
+            Object.defineProperty(stylerFunc, propName, {
+                value: typeof propVal === "function" ? propVal.bind(styler) : propVal
+            });
+        });
+
+        console.dir(stylerFunc);
 
         return stylerFunc;
     }
