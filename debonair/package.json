@@ -1,8 +1,14 @@
 {
   "name": "debonair",
   "description": "A functional way to work with inline styles",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "main": "./src/main.js",
+  "keywords": ["inline styles", "react", "FP", "functional programming", "styles"],
+  "homepage": "https://github.com/brochington/debonair",
+  "bugs": {
+    "url": "https://github.com/brochington/debonair/issues",
+    "email": "brochington@gmail.com"
+  },
   "dependencies": {
     "lodash": "^3.5.0",
     "react": "^0.13.0"
