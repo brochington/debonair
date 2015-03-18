@@ -4,8 +4,8 @@
 
 Debonair is a library created to assist in the creation, organization, and editing of styles within the context of React. It brings many priciples and concepts of a functional programming paradigm into the way we interact with styles.
 
-- [Quick Start](debonair/docs/quickstart.md)
-- [API](debonair/docs/api.md)
+- [Quick Start](docs/quickstart.md)
+- [API](docs/api.md)
 
 ## Features
 
