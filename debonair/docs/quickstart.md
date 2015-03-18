@@ -44,7 +44,9 @@ let styler = stylish.createStyler({
 let standardBorder = {
     border: "solid black 2px"
 };
+
 <div style={styler(standardBorder)}></div>
+
 /*
 Styles will be: 
 {
@@ -65,6 +67,7 @@ Valid structures that can be used as arguments into a styler are:
 let stdHeight = stylish.createStyler({
     height: 100
 });
+
 <div style={stdHeight({width: 100})}></div>
 ```
 - other stylers: 
@@ -72,9 +75,11 @@ let stdHeight = stylish.createStyler({
 let stdHeight = stylish.createStyler({
     height: 100
 });
+
 let stdWidth = stylish.createStyler({
     width: 100
 });
+
 <div style={stdHeight(stdWidth)}></div>
 ```
 - function that return style objects:
@@ -82,11 +87,13 @@ let stdWidth = stylish.createStyler({
 let stdHeight = stylish.createStyler({
     height: 100
 });
+
 let quarterWindowWidth = () => {
     return {
         width: window.innerWidth / 4
     };
 }
+
 <div style={stdHeight(quarterWindowWidth)}></div>
 ```
 - Arrays
@@ -116,7 +123,9 @@ let mergedStyles = Styler.create({
     styler1, 
     [{display: "block"}, {padding: 10}, {padding: 20}]
 );
+
 mergedStyles();
+
 /*
 {
     height: 400, 
@@ -128,14 +137,15 @@ mergedStyles();
 }
 */
 ```
-
 Stylers have a number of methods, many common to a functional programming workflow. please see the [API documentation](./api.md). You can map, filter, reduce, etc on the styler instance. One important thing to note is that because it is still operated on a styler, the return value of whatever operation you are doing should be an object. for instance: 
 ```
 let testStyler = Styler.create({
     height: 100,
     width: 100
 });
+
 testStyler.map(val => style + 200);
+
 /*
 {
     height: 300,
