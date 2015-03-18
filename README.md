@@ -1,4 +1,9 @@
-Debonair is a library that helps in exploring a Functional Approach to JS Styles in React. 
+# Debonair
+
+Debonair is a library created to assist in the creation, organization, and editing of styles within the context of React. It brings many priciples and concepts of a functional programming paradigm into the way we interact with styles.
+
+[API](docs/api.md)
+[Quick Start](docs/quickstart.md)
 
 ## Installation
 
