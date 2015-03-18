@@ -272,14 +272,17 @@ describe("Styler", () => {
         });
     });
     describe("styler filter", () => {
-        it("should filter style object", () => {
-            let styler1 = Styler.create({
+        it("should filter correct properties", () => {
+           let styler1 = Styler.create({
                 height: 100,
                 weight: 100,
                 backgroundColor: "orange"
             });
 
-            let filteredStyles = styler1.filter()
+            let filteredStyles = styler1.filter((val, prop) => Object.is(prop, "backgroundColor"));
+            expect(filteredStyles).to.eql({
+                backgroundColor: "orange"
+            });
         });
-    })
+    });
 });
