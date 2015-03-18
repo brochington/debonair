@@ -15,8 +15,8 @@ let mappedStyles = Styler.create({
 let result = mappedStyles.map(val => val - 50);
 /*
 {
-height: 50,
-width: 50
+    height: 50,
+    width: 50
 }
 */
 ```
