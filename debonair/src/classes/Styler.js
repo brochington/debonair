@@ -14,18 +14,17 @@ let styleTypeHandlers = {
         return entity();
     }
 }
-
-// 
+ 
 /*
 methods to add: omit, forIn, has, findKey, assign, forOwn, reject
 maybe: transform
 create: filterByKey, filterByValue, rejectByKey, rejectByValue
-
 */
 
 // need to do more work to make sure that filter and reject always return a style object.
 let stylerFuncNormalMethods = {
-    map: "mapValues"
+    map: "mapValues",
+    has: "has"
 }
 
 let stylerFuncPropsAndMethods = {
@@ -41,6 +40,17 @@ let stylerFuncPropsAndMethods = {
             }
             return accum;
         }, {});
+    },
+    get(keysArr) {
+        let currentStyles = this._getStyles(),
+            accum = {};
+
+        for(let i = 0, l = keysArr.length; i<l; i++) {
+            if(currentStyles[keysArr[i]]) {
+                accum[keysArr[i]] = currentStyles[keysArr[i]];
+            }
+        }
+        return accum;
     }
 }
 

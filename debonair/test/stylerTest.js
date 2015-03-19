@@ -285,4 +285,17 @@ describe("Styler", () => {
             });
         });
     });
+    describe("styler get", () => {
+        it("should correctly state if object has a property", () => {
+            let styler1 = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "orange"
+            });
+
+            let gotStyles1 = styler1.get(["height", "width"]);
+
+            expect(gotStyles1).to.eql({height: 100, width: 100});
+        });
+    });
 });

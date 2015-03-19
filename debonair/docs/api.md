@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Styler Methods](#styler-methods)
+  - [map](#map)
+  - [reduce](#reduce)
+  - [filter](#filter)
+  - [merge](#merge)
+  - [get](#get)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Styler Methods
 
 ## map
@@ -90,3 +103,21 @@ let mergedStyles = styler.merge({backgroundColor: "orange"});
 }
 */
 ```
+## get
+Returns an object with only properties that match the keys given in array that is passed as argument.
+`<Styler>.get(<Array>)`
+
+```
+let styler = Styler.create({
+    height: 100,
+    width: 100,
+    backgroundColor: "blue"
+});
+
+let gottenStyler = styler.get(["height", "width"]);
+/*
+{
+    height: 100,
+    width: 100
+}
+*/
