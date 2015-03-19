@@ -114,7 +114,7 @@ let styler = Styler.create({
     backgroundColor: "blue"
 });
 
-let gottenStyler = styler.get(["height", "width"]);
+let gottenStyles = styler.get(["height", "width"]);
 /*
 {
     height: 100,
