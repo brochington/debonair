@@ -1,5 +1,7 @@
 # Debonair
 
+[![Join the chat at https://gitter.im/brochington/debonair](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/brochington/debonair?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 `npm install debonair`
 
 Debonair is a library created to assist in the creation, organization, and editing of styles within the context of React. It brings many priciples and concepts of a functional programming paradigm into the way we interact with styles.
