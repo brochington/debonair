@@ -67,6 +67,24 @@ Require:
 var Styler = require("debonair").Styler;
 ```
 
+## Build
+Debonair uses [Webpack](http://webpack.github.io/) to build the library. 
+
+Make sure you have webpack installed
+```
+$ npm install webpack -g
+```
+
+Build bundle
+```
+$ webpack
+```
+
+for Production (uglified):
+```
+$ webpack -p
+```
+
 ## Tests:
 
 ```

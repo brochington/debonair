@@ -121,7 +121,7 @@ class Styler {
             });
         });
 
-        console.dir(stylerFunc);
+        // console.dir(stylerFunc);
 
         return stylerFunc;
     }
