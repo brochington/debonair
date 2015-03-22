@@ -2,6 +2,8 @@
 
 `npm install debonair`
 
+Homepage: [http://brochington.github.io/debonair](http://brochington.github.io/debonair)
+
 Debonair is a library created to assist in the creation, organization, and editing of styles within the context of React (and hopefully React-Native). It brings many priciples and concepts of a functional programming paradigm into the way we interact with styles.
 
 - [Quick Start](docs/quickstart.md)

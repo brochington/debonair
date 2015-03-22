@@ -13,6 +13,88 @@
 
 # Styler Methods
 
+## create
+
+A styler is a functor that when called will return an object suitable for use within the style property in React. It can accept an indeterminate amount of arguments, and will merge the arguments from left to right. Acceptable arguments are: 
+
+- Object
+```
+let standardBox = Styler.create({
+    height: 100,
+    width: 100
+});
+
+standardBox()
+// -> {height: 100, width: 100}
+```
+
+- Stylers
+```
+let standardBox = Styler.create({
+    height: 100,
+    width: 100
+});
+
+let fancyBox = Styler.create(standardBox, {border: "dashed violet 2px"});
+
+fancyBox();
+/*
+-> {
+    height: 100,
+    width: 100,
+    border: "dashed violet 2px"
+}
+*/
+```
+
+- Arrays
+```
+let myStyler = Styler.create([{height: 100}, {width: 100}, {backgroundColor: "blue"}]);
+
+myStyler();
+/*
+-> {
+    height: 100,
+    width: 100,
+    backgroundColor: "blue"
+}
+*/
+```
+
+- Functions
+Note - an object that represents the current state of styles will be passed as an argument.
+```
+let standardBox = Styler.create({
+    height: 100,
+    width: 100
+});
+
+let expandBox = styles => {
+    return {
+        width: styles.width + 100,
+        height: styler.height + 100
+    };
+};
+
+let biggerBox = Styler.create(standardBox, expandBox);
+
+biggerBox();
+/*
+-> {
+    height: 200,
+    width: 200
+}
+*/
+```
+
+# Styler Instance
+Return an object suitable for use in the style property of react components. Accepts an indeterminate number of arguments. Output is the merged result of all arguments. Merge order is Left to right. 
+
+`<Styler>(<Object> || <Array> || <Function>(<Object>currentStyles) || <Styler> )`
+
+
+# Styler Instance Methods
+
 ## map
 Iterates over the keys of an object, applying the iteratee function to each, and returning a new object.
 
