@@ -3,6 +3,9 @@
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Styler Methods](#styler-methods)
+  - [create](#create)
+- [Styler Instance](#styler-instance)
+- [Styler Instance Methods](#styler-instance-methods)
   - [map](#map)
   - [reduce](#reduce)
   - [filter](#filter)
