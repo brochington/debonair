@@ -11,10 +11,6 @@ var modulesExcludedFromBabelCompilation = [
     "webpack-dev-server"
 ];
 
-console.log(modulesExcludedFromBabelCompilation.map(function(val){
-                return __dirname + "/node_modules/" + val;
-            }));
-
 module.exports = {
     entry: [
         "webpack-dev-server/client?http:localhost:3000",

@@ -65,6 +65,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
+	console.log("in Debonair");
+
 	var Debonair = _interopRequire(__webpack_require__(2));
 
 	var Styler = _interopRequire(__webpack_require__(3));
@@ -125,18 +127,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 
-	/*
-	methods to add: omit, forIn, has, findKey, assign, forOwn, reject
-	maybe: transform
-	create: filterByKey, filterByValue, rejectByKey, rejectByValue
-	*/
+	// adds a hidden property on each returned object.
+	var addContext = function (context, val) {
+	    Object.defineProperty(val, "_stylerContext", { value: context });
 
-	// need to do more work to make sure that filter and reject always return a style object.
-	var stylerFuncNormalMethods = {
-	    map: "mapValues",
-	    has: "has"
+	    return val;
 	};
 
+	// try to remove instanceof here.
 	var stylerFuncPropsAndMethods = {
 	    _isStyler: true,
 	    merge: function merge() {
@@ -146,19 +144,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return this._getStyles.apply(this, args);
 	    },
+	    map: function map(mapFunc) {
+	        var data = this instanceof StylerObject ? this : this._getStyles(),
+	            result = addContext(this, _.mapValues(data, mapFunc));
+
+	        return new StylerObject(result, this);
+	    },
 	    reduce: function reduce(reduceFunc) {
-	        return _.reduce(this._getStyles(), reduceFunc, {});
+	        var data = this instanceof StylerObject ? this : this._getStyles(),
+	            result = addContext(this, _.reduce(data, reduceFunc, {}));
+
+	        return new StylerObject(result, this);
 	    },
 	    filter: function filter(filterFunc) {
-	        return _.reduce(this._getStyles(), function (accum, val, key) {
+	        var data = this instanceof StylerObject ? this : this._getStyles();
+	        var result = addContext(this, _.reduce(data, function (accum, val, key) {
 	            if (filterFunc(val, key)) {
 	                accum[key] = val;
 	            }
 	            return accum;
-	        }, {});
+	        }, {}));
+
+	        return new StylerObject(result, this);
 	    },
 	    get: function get(keysArr) {
-	        var currentStyles = this._getStyles(),
+	        var currentStyles = this instanceof StylerObject ? this : this._getStyles(),
 	            accum = {};
 
 	        for (var i = 0, l = keysArr.length; i < l; i++) {
@@ -166,7 +176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                accum[keysArr[i]] = currentStyles[keysArr[i]];
 	            }
 	        }
-	        return accum;
+	        return new StylerObject(accum, this);
 	    }
 	};
 
@@ -185,6 +195,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    return null;
 	};
+
+	var StylerObject = (function () {
+	    function StylerObject(result, context) {
+	        _classCallCheck(this, StylerObject);
+
+	        for (var prop in result) {
+	            this[prop] = result[prop];
+	        }
+	        Object.defineProperty(this, "_isStylerObject", {
+	            value: true
+	        });
+
+	        Object.defineProperty(this, "_stylerContext", {
+	            value: context
+	        });
+	    }
+
+	    _createClass(StylerObject, {
+	        map: {
+	            value: function map(mapFunc) {
+	                return stylerFuncPropsAndMethods.map.call(this, mapFunc);
+	            }
+	        },
+	        filter: {
+	            value: function filter(filterFunc) {
+	                return stylerFuncPropsAndMethods.filter.call(this, filterFunc);
+	            }
+	        },
+	        get: {
+	            value: function get(keysArr) {
+	                return stylerFuncPropsAndMethods.get.call(this, keysArr);
+	            }
+	        }
+	    });
+
+	    return StylerObject;
+	})();
 
 	var StandardStyler = (function () {
 	    function StandardStyler(stylerInstance) {
@@ -219,10 +266,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return styleTypeHandlers[determineType(entity)].bind(_this, entity);
 	                }).reduce(function (outputObj, argFunc) {
 	                    _.assign(outputObj, argFunc(outputObj));
+
 	                    return outputObj;
 	                }, {}).value();
 
-	                return styles;
+	                return new StylerObject(styles, this);
 	            }
 	        }
 	    });
@@ -273,26 +321,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var styler = _applyConstructor(StandardStyler, [this].concat(initStyles)),
 	                    stylerFunc = styler._getStyles.bind(styler);
 
-	                _.forEach(stylerFuncNormalMethods, function (lodashMethod, methodName) {
-	                    // let boundMethod = _[lodashMethod]()
-	                    Object.defineProperty(stylerFunc, methodName, {
-	                        value: (function () {
-	                            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	                                args[_key2] = arguments[_key2];
-	                            }
-
-	                            return _[lodashMethod].apply(_, [styler._getStyles()].concat(args));
-	                        }).bind(styler)
-	                    });
-	                });
-
 	                _.forEach(stylerFuncPropsAndMethods, function (propVal, propName) {
 	                    Object.defineProperty(stylerFunc, propName, {
 	                        value: typeof propVal === "function" ? propVal.bind(styler) : propVal
 	                    });
 	                });
-
-	                // console.dir(stylerFunc);
 
 	                return stylerFunc;
 	            }

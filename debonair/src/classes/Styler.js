@@ -14,35 +14,44 @@ let styleTypeHandlers = {
         return entity();
     }
 }
- 
-/*
-methods to add: omit, forIn, has, findKey, assign, forOwn, reject
-maybe: transform
-create: filterByKey, filterByValue, rejectByKey, rejectByValue
-*/
 
-// need to do more work to make sure that filter and reject always return a style object.
-let stylerFuncNormalMethods = {
-    map: "mapValues",
-    has: "has"
+// adds a hidden property on each returned object.
+let addContext = (context, val) => {
+    Object.defineProperty(val, "_stylerContext", {value: context});
+
+    return val;
 }
 
+// try to remove instanceof here.
 let stylerFuncPropsAndMethods = {
     _isStyler: true,
     merge(...args) { return this._getStyles(...args);},
+    map(mapFunc) {
+       let data = this instanceof StylerObject ? this : this._getStyles(),
+           result = addContext(this, _.mapValues(data, mapFunc));
+
+        return new StylerObject(result, this);
+    },
     reduce(reduceFunc) {
-        return _.reduce(this._getStyles(), reduceFunc, {});
+        let data = this instanceof StylerObject ? this : this._getStyles(),
+            result = addContext(this, _.reduce(data, reduceFunc, {}));
+
+        return new StylerObject(result, this);
     },
     filter(filterFunc) {
-        return _.reduce(this._getStyles(), (accum, val, key) => {
+        let data = this instanceof StylerObject ? this : this._getStyles();
+        let result = addContext(this, _.reduce(data, (accum, val, key) => {
             if(filterFunc(val, key)) {
                 accum[key] = val;
             }
             return accum;
-        }, {});
+        }, {}));
+
+        return new StylerObject(result, this);
+
     },
     get(keysArr) {
-        let currentStyles = this._getStyles(),
+        let currentStyles = this instanceof StylerObject ? this : this._getStyles(),
             accum = {};
 
         for(let i = 0, l = keysArr.length; i<l; i++) {
@@ -50,7 +59,7 @@ let stylerFuncPropsAndMethods = {
                 accum[keysArr[i]] = currentStyles[keysArr[i]];
             }
         }
-        return accum;
+        return new StylerObject(accum, this);
     }
 }
 
@@ -62,6 +71,30 @@ let determineType = entity => {
     else if(_.isString(entity)) {return "isString"}
     return null;
 } 
+
+class StylerObject {
+    constructor(result, context) {
+        for (let prop in result) {
+            this[prop] = result[prop];
+        }
+        Object.defineProperty(this, "_isStylerObject", {
+            value: true
+        });
+
+        Object.defineProperty(this, "_stylerContext", {
+            value: context
+        });
+    }
+    map(mapFunc) {
+        return stylerFuncPropsAndMethods.map.call(this, mapFunc);
+    }
+    filter(filterFunc) {
+        return stylerFuncPropsAndMethods.filter.call(this, filterFunc);
+    }
+    get(keysArr) {
+        return stylerFuncPropsAndMethods.get.call(this, keysArr);
+    }
+}
 
 class StandardStyler {
     constructor(stylerInstance, ...initStyles) {
@@ -79,11 +112,12 @@ class StandardStyler {
             .map(entity => styleTypeHandlers[determineType(entity)].bind(this, entity))
             .reduce((outputObj, argFunc) => {
                 _.assign(outputObj, argFunc(outputObj));
+
                 return outputObj;
             }, {})
             .value();
 
-        return styles;
+        return new StylerObject(styles, this);
     }
 }
 
@@ -106,22 +140,11 @@ class Styler {
         let styler = new StandardStyler(this, ...initStyles),
             stylerFunc = styler._getStyles.bind(styler);
 
-        _.forEach(stylerFuncNormalMethods, (lodashMethod, methodName) => {
-            // let boundMethod = _[lodashMethod]()
-            Object.defineProperty(stylerFunc, methodName, {
-                value: (...args) => {
-                    return _[lodashMethod](styler._getStyles(), ...args);
-                }.bind(styler)
-            });
-        });
-
         _.forEach(stylerFuncPropsAndMethods, (propVal, propName) => {
             Object.defineProperty(stylerFunc, propName, {
                 value: typeof propVal === "function" ? propVal.bind(styler) : propVal
             });
         });
-
-        // console.dir(stylerFunc);
 
         return stylerFunc;
     }
