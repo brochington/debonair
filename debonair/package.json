@@ -1,7 +1,7 @@
 {
   "name": "debonair",
   "description": "A functional way to work with inline styles",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "./build/bundle.js",
   "keywords": ["inline styles", "react", "FP", "functional programming", "styles"],
   "homepage": "https://github.com/brochington/debonair",

@@ -250,8 +250,8 @@ describe("Styler", () => {
             });
 
             let mergedStyles = styler1.merge({
-                    height: 100,
-                    width: 100
+                    height: 124,
+                    width: 136
                 },{
                     backgroundColor: "orange"
                 }, 
@@ -298,4 +298,30 @@ describe("Styler", () => {
             expect(gotStyles1).to.eql({height: 100, width: 100});
         });
     });
+    describe("styler chain methods", () => {
+        it("should be able to chain standard methods.", () => {
+            let styler = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "orange"
+            });
+
+            let result = styler.filter((val, key) => typeof val === "number")
+                               .map(val => val + 100)
+                               .get(["height"])
+                               .merge({border: "solid black 2px"})
+                               .reduce((accum, val, key) => {
+                                    if(typeof val === "number") {
+                                        accum[key] = val;
+                                    }
+                                    return accum;
+                               });
+
+            expect(result).to.eql({height: 200});
+
+            // console.log(result);
+
+
+        });
+    })
 });

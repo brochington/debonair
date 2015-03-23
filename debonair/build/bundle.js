@@ -65,8 +65,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	console.log("in Debonair");
-
 	var Debonair = _interopRequire(__webpack_require__(2));
 
 	var Styler = _interopRequire(__webpack_require__(3));
@@ -114,7 +112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var styleTypeHandlers = {
 	    isArray: function isArray(entity) {
-	        return this._merge(entity);
+	        return merge(entity);
 	    },
 	    isObject: function isObject(entity) {
 	        return entity;
@@ -124,59 +122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    isStyler: function isStyler(entity, collector) {
 	        return entity();
-	    }
-	};
-
-	// adds a hidden property on each returned object.
-	var addContext = function (context, val) {
-	    Object.defineProperty(val, "_stylerContext", { value: context });
-
-	    return val;
-	};
-
-	// try to remove instanceof here.
-	var stylerFuncPropsAndMethods = {
-	    _isStyler: true,
-	    merge: function merge() {
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
-	        }
-
-	        return this._getStyles.apply(this, args);
-	    },
-	    map: function map(mapFunc) {
-	        var data = this instanceof StylerObject ? this : this._getStyles(),
-	            result = addContext(this, _.mapValues(data, mapFunc));
-
-	        return new StylerObject(result, this);
-	    },
-	    reduce: function reduce(reduceFunc) {
-	        var data = this instanceof StylerObject ? this : this._getStyles(),
-	            result = addContext(this, _.reduce(data, reduceFunc, {}));
-
-	        return new StylerObject(result, this);
-	    },
-	    filter: function filter(filterFunc) {
-	        var data = this instanceof StylerObject ? this : this._getStyles();
-	        var result = addContext(this, _.reduce(data, function (accum, val, key) {
-	            if (filterFunc(val, key)) {
-	                accum[key] = val;
-	            }
-	            return accum;
-	        }, {}));
-
-	        return new StylerObject(result, this);
-	    },
-	    get: function get(keysArr) {
-	        var currentStyles = this instanceof StylerObject ? this : this._getStyles(),
-	            accum = {};
-
-	        for (var i = 0, l = keysArr.length; i < l; i++) {
-	            if (currentStyles[keysArr[i]]) {
-	                accum[keysArr[i]] = currentStyles[keysArr[i]];
-	            }
-	        }
-	        return new StylerObject(accum, this);
 	    }
 	};
 
@@ -196,6 +141,85 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return null;
 	};
 
+	// adds a hidden property on each returned object.
+	// let addContext = (context, val) => {
+	//     Object.defineProperty(val, "_stylerContext", {value: context});
+
+	//     return val;
+	// }
+
+	var merge = function (stylesArr) {
+	    // console.log("merge 2");
+	    // console.log(stylesArr);
+	    var styles = _.chain(stylesArr).map(function (entity) {
+	        return styleTypeHandlers[determineType(entity)].bind(null, entity);
+	    }).reduce(function (outputObj, argFunc) {
+	        _.assign(outputObj, argFunc(outputObj));
+
+	        return outputObj;
+	    }, {}).value();
+
+	    return styles;
+	};
+
+	// try to remove instanceof here.
+	var stylerFuncPropsAndMethods = {
+	    _isStyler: true,
+	    merge: (function (_merge) {
+	        var _mergeWrapper = function merge(_x) {
+	            return _merge.apply(this, arguments);
+	        };
+
+	        _mergeWrapper.toString = function () {
+	            return _merge.toString();
+	        };
+
+	        return _mergeWrapper;
+	    })(function () {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        var newArgs = [_.assign({}, this)].concat(args);
+
+	        return new StylerObject(merge(newArgs), this);
+	    }),
+	    map: function map(mapFunc) {
+	        var data = this instanceof StylerObject ? this : this._getStyles(),
+	            result = _.mapValues(data, mapFunc);
+
+	        return new StylerObject(result, this);
+	    },
+	    reduce: function reduce(reduceFunc) {
+	        var data = this instanceof StylerObject ? this : this._getStyles(),
+	            result = _.reduce(data, reduceFunc, {});
+
+	        return new StylerObject(result, this);
+	    },
+	    filter: function filter(filterFunc) {
+	        var data = this instanceof StylerObject ? this : this._getStyles();
+	        var result = _.reduce(data, function (accum, val, key) {
+	            if (filterFunc(val, key)) {
+	                accum[key] = val;
+	            }
+	            return accum;
+	        }, {});
+
+	        return new StylerObject(result, this);
+	    },
+	    get: function get(keysArr) {
+	        var currentStyles = this instanceof StylerObject ? this : this._getStyles(),
+	            accum = {};
+
+	        for (var i = 0, l = keysArr.length; i < l; i++) {
+	            if (currentStyles[keysArr[i]]) {
+	                accum[keysArr[i]] = currentStyles[keysArr[i]];
+	            }
+	        }
+	        return new StylerObject(accum, this);
+	    }
+	};
+
 	var StylerObject = (function () {
 	    function StylerObject(result, context) {
 	        _classCallCheck(this, StylerObject);
@@ -203,13 +227,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var prop in result) {
 	            this[prop] = result[prop];
 	        }
-	        Object.defineProperty(this, "_isStylerObject", {
-	            value: true
-	        });
-
-	        Object.defineProperty(this, "_stylerContext", {
-	            value: context
-	        });
 	    }
 
 	    _createClass(StylerObject, {
@@ -227,6 +244,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            value: function get(keysArr) {
 	                return stylerFuncPropsAndMethods.get.call(this, keysArr);
 	            }
+	        },
+	        merge: {
+	            value: function merge() {
+	                var _stylerFuncPropsAndMethods$merge;
+
+	                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	                    args[_key] = arguments[_key];
+	                }
+
+	                return (_stylerFuncPropsAndMethods$merge = stylerFuncPropsAndMethods.merge).call.apply(_stylerFuncPropsAndMethods$merge, [this].concat(args));
+	            }
+	        },
+	        reduce: {
+	            value: function reduce(reduceFunc) {
+	                return stylerFuncPropsAndMethods.reduce.call(this, reduceFunc);
+	            }
 	        }
 	    });
 
@@ -241,8 +274,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _classCallCheck(this, StandardStyler);
 
-	        this._initStyles = initStyles;
-	        this._stylerInstance = stylerInstance;
+	        Object.defineProperty(this, "_initStyles", { value: initStyles });
+	        Object.defineProperty(this, "_stylerInstance", { value: stylerInstance });
 	    }
 
 	    _createClass(StandardStyler, {
@@ -254,56 +287,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                var stylesArr = this._initStyles.concat(args);
 
-	                return this._merge(stylesArr);
-	            }
-	        },
-	        _merge: {
-	            value: function _merge(stylesArr) {
-	                var _this = this;
-
-	                // TODO: optimize styles chain.
-	                var styles = _.chain(stylesArr).map(function (entity) {
-	                    return styleTypeHandlers[determineType(entity)].bind(_this, entity);
-	                }).reduce(function (outputObj, argFunc) {
-	                    _.assign(outputObj, argFunc(outputObj));
-
-	                    return outputObj;
-	                }, {}).value();
-
-	                return new StylerObject(styles, this);
+	                return new StylerObject(merge(stylesArr), this);
 	            }
 	        }
 	    });
 
 	    return StandardStyler;
-	})();
-
-	// EnumStylers will be very quick, but will be completely immutable
-	// Good for a one time evaluation of a long sequence which will not change.
-	// Can still use styler methods like map, reduce, etc.
-
-	var EnumStyler = (function () {
-	    function EnumStyler(stylerInstance) {
-	        for (var _len = arguments.length, initArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	            initArgs[_key - 1] = arguments[_key];
-	        }
-
-	        _classCallCheck(this, EnumStyler);
-
-	        this._styleCache = this._merge.apply(this, initArgs);
-	    }
-
-	    _createClass(EnumStyler, {
-	        _getStyles: {
-	            value: function _getStyles() {
-	                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	                    args[_key] = arguments[_key];
-	                }
-	            }
-	        }
-	    });
-
-	    return EnumStyler;
 	})();
 
 	var Styler = (function () {
