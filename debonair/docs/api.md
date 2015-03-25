@@ -249,5 +249,28 @@ propCount === 2;
 
 # Styler Object Methods
 
+THe following Styler Methods are the same as on the Styler Object Methods: 
+`map, reduce, filter, get, forEach, merge`
+
 ## toStyler 
-Convert the output of a styler directly into a new Styler.
+Convert the output of a styler directly into a new Styler. It is important to note that this method
+returns a functor that must be evaluated if used directly in the style prop of a React component.
+
+`<StylerObject>.toStyler()`
+
+```
+let styler = Styler.create({
+    height: 100,
+    width: 100,
+});
+
+let newstyler = styler.map((val, key) => Object.is(key, "height") ? val + 100 : val).toStyler();
+
+newStyler();
+/*
+{
+height: 200,
+width: 100
+}
+*/
+```
