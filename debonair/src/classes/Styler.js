@@ -24,33 +24,18 @@ let determineType = entity => {
     return null;
 }
 
-// adds a hidden property on each returned object.
-// let addContext = (context, val) => {
-//     Object.defineProperty(val, "_stylerContext", {value: context});
-
-//     return val;
-// }
-
 let merge = (stylesArr) => {
-    // console.log("merge 2");
-    // console.log(stylesArr);
-    let styles = _.chain(stylesArr)
-            .map(entity => {
-                return styleTypeHandlers[determineType(entity)].bind(null, entity)
-            })
+    return _.chain(stylesArr)
+            .map(entity => styleTypeHandlers[determineType(entity)].bind(null, entity))
             .reduce((outputObj, argFunc) => {
                 _.assign(outputObj, argFunc(outputObj));
 
                 return outputObj;
             }, {})
             .value();
-
-    return styles;
 }
 
-// try to remove instanceof here.
-let stylerFuncPropsAndMethods = {
-    _isStyler: true,
+let functionalMethods = {
     merge(...args) {
         let newArgs = [_.assign({}, this), ...args];
 
@@ -90,6 +75,13 @@ let stylerFuncPropsAndMethods = {
             }
         }
         return new StylerObject(accum, this);
+    },
+    forEach(iteratee) {
+        let data = this instanceof StylerObject ? this : this._getStyles();
+
+        _.forEach(data, iteratee);
+
+        return data;
     }
 } 
 
@@ -100,19 +92,25 @@ class StylerObject {
         }
     }
     map(mapFunc) {
-        return stylerFuncPropsAndMethods.map.call(this, mapFunc);
+        return functionalMethods.map.call(this, mapFunc);
     }
     filter(filterFunc) {
-        return stylerFuncPropsAndMethods.filter.call(this, filterFunc);
+        return functionalMethods.filter.call(this, filterFunc);
     }
     get(keysArr) {
-        return stylerFuncPropsAndMethods.get.call(this, keysArr);
+        return functionalMethods.get.call(this, keysArr);
     }
     merge(...args) {
-        return stylerFuncPropsAndMethods.merge.call(this, ...args);
+        return functionalMethods.merge.call(this, ...args);
     }
     reduce(reduceFunc) {
-        return stylerFuncPropsAndMethods.reduce.call(this, reduceFunc);
+        return functionalMethods.reduce.call(this, reduceFunc);
+    }
+    forEach(iteratee) {
+        return functionalMethods.forEach.call(this, iteratee);
+    }
+    toStyler() {
+        return new Styler().create(this);
     }
 }
 
@@ -135,18 +133,15 @@ class Styler {
         let styler = new StandardStyler(this, ...initStyles),
             stylerFunc = styler._getStyles.bind(styler);
 
-        _.forEach(stylerFuncPropsAndMethods, (propVal, propName) => {
+        _.forEach(functionalMethods, (propVal, propName) => {
             Object.defineProperty(stylerFunc, propName, {
                 value: typeof propVal === "function" ? propVal.bind(styler) : propVal
             });
         });
 
-        return stylerFunc;
-    }
-    createEnum(initStyles) {
-        let enumStyler = new EnumStyler(initStyles, this);
+        Object.defineProperty(stylerFunc, "_isStyler", {value: true});
 
-        return enumStyler._getStyles.bind(styler);
+        return stylerFunc;
     }
 }
 

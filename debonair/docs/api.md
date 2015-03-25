@@ -11,6 +11,9 @@
   - [filter](#filter)
   - [merge](#merge)
   - [get](#get)
+  - [forEach](#foreach)
+- [Styler Object Methods](#styler-object-methods)
+  - [toStyler](#tostyler)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -97,6 +100,25 @@ Return an object suitable for use in the style property of react components. Acc
 
 
 # Styler Instance Methods
+
+Styler Instance Methods can be chained
+```
+let styler = Styler.create({
+    height: 100,
+    width: 100,
+    backgroundColor: "blue" 
+});
+
+let resizedBox = styler.filter((val, key) => typeof val === "number")
+                       .map(val => val + 100);
+
+/*
+{
+height: 200,
+width: 200
+}
+*/
+```
 
 ## map
 Iterates over the keys of an object, applying the iteratee function to each, and returning a new object.
@@ -206,3 +228,26 @@ let gottenStyles = styler.get(["height", "width"]);
     width: 100
 }
 */
+```
+## forEach
+Call the iteratee function for each key/value pair, and returns the unaltered style object. 
+`<Styler>.forEach(<Function>(value, key))`
+
+```
+let styler = Styler.create({
+    height: 100,
+    width: 200
+});
+
+let propCount = 0;
+
+let styles = styler.forEach(() => propCount++));
+/*
+propCount === 2;
+*/
+```
+
+# Styler Object Methods
+
+## toStyler 
+Convert the output of a styler directly into a new Styler.

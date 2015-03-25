@@ -141,30 +141,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return null;
 	};
 
-	// adds a hidden property on each returned object.
-	// let addContext = (context, val) => {
-	//     Object.defineProperty(val, "_stylerContext", {value: context});
-
-	//     return val;
-	// }
-
 	var merge = function (stylesArr) {
-	    // console.log("merge 2");
-	    // console.log(stylesArr);
-	    var styles = _.chain(stylesArr).map(function (entity) {
+	    return _.chain(stylesArr).map(function (entity) {
 	        return styleTypeHandlers[determineType(entity)].bind(null, entity);
 	    }).reduce(function (outputObj, argFunc) {
 	        _.assign(outputObj, argFunc(outputObj));
 
 	        return outputObj;
 	    }, {}).value();
-
-	    return styles;
 	};
 
-	// try to remove instanceof here.
-	var stylerFuncPropsAndMethods = {
-	    _isStyler: true,
+	var functionalMethods = {
 	    merge: (function (_merge) {
 	        var _mergeWrapper = function merge(_x) {
 	            return _merge.apply(this, arguments);
@@ -217,6 +204,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	        return new StylerObject(accum, this);
+	    },
+	    forEach: function forEach(iteratee) {
+	        var data = this instanceof StylerObject ? this : this._getStyles();
+
+	        _.forEach(data, iteratee);
+
+	        return data;
 	    }
 	};
 
@@ -232,33 +226,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(StylerObject, {
 	        map: {
 	            value: function map(mapFunc) {
-	                return stylerFuncPropsAndMethods.map.call(this, mapFunc);
+	                return functionalMethods.map.call(this, mapFunc);
 	            }
 	        },
 	        filter: {
 	            value: function filter(filterFunc) {
-	                return stylerFuncPropsAndMethods.filter.call(this, filterFunc);
+	                return functionalMethods.filter.call(this, filterFunc);
 	            }
 	        },
 	        get: {
 	            value: function get(keysArr) {
-	                return stylerFuncPropsAndMethods.get.call(this, keysArr);
+	                return functionalMethods.get.call(this, keysArr);
 	            }
 	        },
 	        merge: {
 	            value: function merge() {
-	                var _stylerFuncPropsAndMethods$merge;
+	                var _functionalMethods$merge;
 
 	                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	                    args[_key] = arguments[_key];
 	                }
 
-	                return (_stylerFuncPropsAndMethods$merge = stylerFuncPropsAndMethods.merge).call.apply(_stylerFuncPropsAndMethods$merge, [this].concat(args));
+	                return (_functionalMethods$merge = functionalMethods.merge).call.apply(_functionalMethods$merge, [this].concat(args));
 	            }
 	        },
 	        reduce: {
 	            value: function reduce(reduceFunc) {
-	                return stylerFuncPropsAndMethods.reduce.call(this, reduceFunc);
+	                return functionalMethods.reduce.call(this, reduceFunc);
+	            }
+	        },
+	        forEach: {
+	            value: function forEach(iteratee) {
+	                return functionalMethods.forEach.call(this, iteratee);
+	            }
+	        },
+	        toStyler: {
+	            value: function toStyler() {
+	                return new Styler().create(this);
 	            }
 	        }
 	    });
@@ -310,20 +314,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var styler = _applyConstructor(StandardStyler, [this].concat(initStyles)),
 	                    stylerFunc = styler._getStyles.bind(styler);
 
-	                _.forEach(stylerFuncPropsAndMethods, function (propVal, propName) {
+	                _.forEach(functionalMethods, function (propVal, propName) {
 	                    Object.defineProperty(stylerFunc, propName, {
 	                        value: typeof propVal === "function" ? propVal.bind(styler) : propVal
 	                    });
 	                });
 
-	                return stylerFunc;
-	            }
-	        },
-	        createEnum: {
-	            value: function createEnum(initStyles) {
-	                var enumStyler = new EnumStyler(initStyles, this);
+	                Object.defineProperty(stylerFunc, "_isStyler", { value: true });
 
-	                return enumStyler._getStyles.bind(styler);
+	                return stylerFunc;
 	            }
 	        }
 	    });

@@ -298,8 +298,25 @@ describe("Styler", () => {
             expect(gotStyles1).to.eql({height: 100, width: 100});
         });
     });
+    describe("styler forEach", () => {
+        it("should iterate over styler", () => {
+            let propCount = 0,
+                styler = Styler.create({
+                height: 100,
+                width: 100, 
+                padding: 10,
+                margin: 10
+            });
+
+            let result = styler.forEach((val, key) => {propCount++});
+
+            expect(result).to.eql(styler());
+            expect(propCount).to.equal(4);
+        });
+    });
     describe("styler chain methods", () => {
         it("should be able to chain standard methods.", () => {
+            let propCount = 0;
             let styler = Styler.create({
                 height: 100,
                 width: 100,
@@ -310,6 +327,7 @@ describe("Styler", () => {
                                .map(val => val + 100)
                                .get(["height"])
                                .merge({border: "solid black 2px"})
+                               .forEach(val => propCount++)
                                .reduce((accum, val, key) => {
                                     if(typeof val === "number") {
                                         accum[key] = val;
@@ -318,10 +336,13 @@ describe("Styler", () => {
                                });
 
             expect(result).to.eql({height: 200});
-
-            // console.log(result);
-
+            expect(propCount).to.equal(2);
 
         });
-    })
+    });
+    describe("styler instance toStyler", () => {
+        it("should create a new styler", () => {
+
+        });
+    });
 });
