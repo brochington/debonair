@@ -31,7 +31,7 @@ let standardBox = Styler.create({
 });
 
 standardBox()
-// -> {height: 100, width: 100}
+// {height: 100, width: 100}
 ```
 
 - Stylers
@@ -45,7 +45,7 @@ let fancyBox = Styler.create(standardBox, {border: "dashed violet 2px"});
 
 fancyBox();
 /*
--> {
+{
     height: 100,
     width: 100,
     border: "dashed violet 2px"
@@ -59,7 +59,7 @@ let myStyler = Styler.create([{height: 100}, {width: 100}, {backgroundColor: "bl
 
 myStyler();
 /*
--> {
+{
     height: 100,
     width: 100,
     backgroundColor: "blue"
@@ -86,7 +86,7 @@ let biggerBox = Styler.create(standardBox, expandBox);
 
 biggerBox();
 /*
--> {
+{
     height: 200,
     width: 200
 }
@@ -114,8 +114,8 @@ let resizedBox = styler.filter((val, key) => typeof val === "number")
 
 /*
 {
-height: 200,
-width: 200
+    height: 200,
+    width: 200
 }
 */
 ```
@@ -230,7 +230,8 @@ let gottenStyles = styler.get(["height", "width"]);
 */
 ```
 ## forEach
-Call the iteratee function for each key/value pair, and returns the unaltered style object. 
+Call the iteratee function for each key/value pair, and returns the unaltered style object.
+
 `<Styler>.forEach(<Function>(value, key))`
 
 ```
@@ -249,7 +250,8 @@ propCount === 2;
 
 # Styler Object Methods
 
-THe following Styler Methods are the same as on the Styler Object Methods: 
+The following Styler Methods are the same as on the Styler Object Methods: 
+
 `map, reduce, filter, get, forEach, merge`
 
 ## toStyler 
