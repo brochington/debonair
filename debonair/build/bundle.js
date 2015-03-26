@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    isFunction: function isFunction(entity, collector) {
 	        return entity(collector);
 	    },
-	    isStyler: function isStyler(entity, collector) {
+	    isStyler: function isStyler(entity) {
 	        return entity();
 	    }
 	};
@@ -203,14 +203,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	                accum[keysArr[i]] = currentStyles[keysArr[i]];
 	            }
 	        }
+
 	        return new StylerObject(accum, this);
 	    },
-	    forEach: function forEach(iteratee) {
+	    forIn: function forIn(iteratee) {
 	        var data = this instanceof StylerObject ? this : this._getStyles();
 
-	        _.forEach(data, iteratee);
+	        _.forIn(data, iteratee);
 
 	        return data;
+	    },
+	    update: function update() {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        var data = this instanceof StylerObject ? this : this._getStyles(),
+	            mergedArgs = merge(args),
+	            styles = {};
+
+	        for (var prop in data) {
+	            if (data[prop]) {
+	                if (mergedArgs.hasOwnProperty(prop)) {
+	                    if (!Object.is(mergedArgs[prop], null)) {
+	                        styles[prop] = mergedArgs[prop];
+	                    }
+	                } else {
+	                    styles[prop] = data[prop];
+	                }
+	            }
+	        }
+
+	        return new StylerObject(styles, this);
 	    }
 	};
 
@@ -255,9 +279,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return functionalMethods.reduce.call(this, reduceFunc);
 	            }
 	        },
-	        forEach: {
-	            value: function forEach(iteratee) {
-	                return functionalMethods.forEach.call(this, iteratee);
+	        forIn: {
+	            value: function forIn(iteratee) {
+	                return functionalMethods.forIn.call(this, iteratee);
+	            }
+	        },
+	        update: {
+	            value: function update() {
+	                var _functionalMethods$update;
+
+	                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	                    args[_key] = arguments[_key];
+	                }
+
+	                return (_functionalMethods$update = functionalMethods.update).call.apply(_functionalMethods$update, [this].concat(args));
 	            }
 	        },
 	        toStyler: {

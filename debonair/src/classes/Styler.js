@@ -10,7 +10,7 @@ let styleTypeHandlers = {
     isFunction(entity, collector) {
         return entity(collector);
     }, 
-    isStyler(entity, collector) {
+    isStyler(entity) {
         return entity();
     }
 }
@@ -63,7 +63,6 @@ let functionalMethods = {
         }, {});
 
         return new StylerObject(result, this);
-
     },
     get(keysArr) {
         let currentStyles = this instanceof StylerObject ? this : this._getStyles(),
@@ -74,14 +73,34 @@ let functionalMethods = {
                 accum[keysArr[i]] = currentStyles[keysArr[i]];
             }
         }
+
         return new StylerObject(accum, this);
     },
-    forEach(iteratee) {
+    forIn(iteratee) {
         let data = this instanceof StylerObject ? this : this._getStyles();
 
-        _.forEach(data, iteratee);
+        _.forIn(data, iteratee);
 
         return data;
+    },
+    update(...args) {
+        let data = this instanceof StylerObject ? this : this._getStyles(),
+            mergedArgs = merge(args),
+            styles = {};
+
+        for(let prop in data) {
+            if(data[prop]) {
+                if(mergedArgs.hasOwnProperty(prop)) {
+                    if(!Object.is(mergedArgs[prop], null)) {
+                        styles[prop] = mergedArgs[prop];
+                    }
+                } else {
+                    styles[prop] = data[prop];
+                }
+            }
+        }
+
+        return new StylerObject(styles, this);
     }
 } 
 
@@ -106,8 +125,11 @@ class StylerObject {
     reduce(reduceFunc) {
         return functionalMethods.reduce.call(this, reduceFunc);
     }
-    forEach(iteratee) {
-        return functionalMethods.forEach.call(this, iteratee);
+    forIn(iteratee) {
+        return functionalMethods.forIn.call(this, iteratee);
+    }
+    update(...args) {
+        return functionalMethods.update.call(this, ...args);
     }
     toStyler() {
         return new Styler().create(this);

@@ -11,7 +11,7 @@
   - [filter](#filter)
   - [merge](#merge)
   - [get](#get)
-  - [forEach](#foreach)
+  - [forIn](#forIn)
 - [Styler Object Methods](#styler-object-methods)
   - [toStyler](#tostyler)
 
@@ -229,10 +229,10 @@ let gottenStyles = styler.get(["height", "width"]);
 }
 */
 ```
-## forEach
+## forIn
 Call the iteratee function for each key/value pair, and returns the unaltered style object.
 
-`<Styler>.forEach(<Function>(value, key))`
+`<Styler>.forIn(<Function>(value, key))`
 
 ```
 let styler = Styler.create({
@@ -242,17 +242,40 @@ let styler = Styler.create({
 
 let propCount = 0;
 
-let styles = styler.forEach(() => propCount++));
+let styles = styler.forIn(() => propCount++));
 /*
 propCount === 2;
 */
 ```
 
+## update
+Returns a new object comprised of the the current styles, and updates the values of styles matching those
+on objects passed as arguments. Arguments will be evaluated my an internal merge function, which makes any arguments types that may be passed into a styler instance valid. If an object that is passed as an argument has a property that has a value of null, then the property will NOT be added to the returned object.
+
+`<Styler>.update(<Object> || <Array> || <Function>(<Object>currentStyles) || <Styler> )`
+
+```
+let styler = styler.create({
+    height: 100, 
+    width: 100,
+    backgroundColor: "blue"
+});
+
+let updatedStyles = styler.update({height: 125}, {backgroundColor: null});
+/*
+{
+    height: 125, 
+    width: 100
+}
+*/
+```
+
+
 # Styler Object Methods
 
 The following Styler Methods are the same as on the Styler Object Methods: 
 
-`map, reduce, filter, get, forEach, merge`
+`map, reduce, filter, get, forIn, merge`
 
 ## toStyler 
 Convert the output of a styler directly into a new Styler. It is important to note that this method

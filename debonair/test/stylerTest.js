@@ -298,7 +298,7 @@ describe("Styler", () => {
             expect(gotStyles1).to.eql({height: 100, width: 100});
         });
     });
-    describe("styler forEach", () => {
+    describe("styler forIn", () => {
         it("should iterate over styler", () => {
             let propCount = 0,
                 styler = Styler.create({
@@ -308,10 +308,26 @@ describe("Styler", () => {
                 margin: 10
             });
 
-            let result = styler.forEach((val, key) => {propCount++});
+            let result = styler.forIn((val, key) => {propCount++});
 
             expect(result).to.eql(styler());
             expect(propCount).to.equal(4);
+        });
+    });
+    describe("styler update", () => {
+        it("should update styles, and not add any new props.", () => {
+            let styler = Styler.create({
+                height: 100,
+                width: 100,
+                backgroundColor: "blue"
+            });
+
+            let updatedStyles = styler.update({height: 200}, {width: 125}, {backgroundColor: null});
+
+            expect(updatedStyles).to.eql({
+                height: 200,
+                width: 125
+            });
         });
     });
     describe("styler chain methods", () => {
@@ -327,7 +343,8 @@ describe("Styler", () => {
                                .map(val => val + 100)
                                .get(["height"])
                                .merge({border: "solid black 2px"})
-                               .forEach(val => propCount++)
+                               .forIn(val => propCount++)
+                               .update({height: 120})
                                .reduce((accum, val, key) => {
                                     if(typeof val === "number") {
                                         accum[key] = val;
@@ -335,14 +352,21 @@ describe("Styler", () => {
                                     return accum;
                                });
 
-            expect(result).to.eql({height: 200});
+            expect(result).to.eql({height: 120});
             expect(propCount).to.equal(2);
 
         });
     });
     describe("styler instance toStyler", () => {
         it("should create a new styler", () => {
+            let styler = Styler.create({
+                height: 100,
+                width: 100, 
+            });
 
+            let newStyler = styler.map(val => val + 100).toStyler();
+
+            expect(newStyler)
         });
     });
 });
