@@ -11,7 +11,8 @@
   - [filter](#filter)
   - [merge](#merge)
   - [get](#get)
-  - [forIn](#forIn)
+  - [forIn](#forin)
+  - [update](#update)
 - [Styler Object Methods](#styler-object-methods)
   - [toStyler](#tostyler)
 
