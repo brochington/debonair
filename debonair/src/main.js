@@ -1,7 +1,8 @@
 import Debonair from "./classes/Debonair";
-import Styler from "./classes/Styler";
+import { Styler, StylerObject } from "./classes/Styler";
 
 export default {
     Debonair: Debonair,
-    Styler: Styler
+    Styler: Styler,
+    StylerObject: StylerObject
 };

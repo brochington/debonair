@@ -1,5 +1,4 @@
-import { Styler } from "../src/main";
-
+import { Styler, StylerObject } from "../src/main";
 
 describe("Styler", () => {
     it("should exist", () => {
@@ -141,7 +140,10 @@ describe("Styler", () => {
                 backgroundColor: "blue"
             });
 
-            let stylerWithFunction = styler1(() => {return {backgroundColor: "yellow"}});
+            let stylerWithFunction = styler1((styleObject) => {
+                expect(styleObject).to.be.instanceof(StylerObject);
+                return {backgroundColor: "yellow"}
+            });
 
             expect(stylerWithFunction).to.eql({
                 height: 100,

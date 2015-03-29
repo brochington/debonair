@@ -67,11 +67,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Debonair = _interopRequire(__webpack_require__(2));
 
-	var Styler = _interopRequire(__webpack_require__(3));
+	var _classesStyler = __webpack_require__(3);
 
+	var Styler = _classesStyler.Styler;
+	var StylerObject = _classesStyler.StylerObject;
 	module.exports = {
 	    Debonair: Debonair,
-	    Styler: Styler
+	    Styler: Styler,
+	    StylerObject: StylerObject
 	};
 
 /***/ },
@@ -118,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return entity;
 	    },
 	    isFunction: function isFunction(entity, collector) {
-	        return entity(collector);
+	        return entity(new StylerObject(collector));
 	    },
 	    isStyler: function isStyler(entity) {
 	        return entity();
@@ -239,7 +242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var StylerObject = (function () {
-	    function StylerObject(result, context) {
+	    function StylerObject(result) {
 	        _classCallCheck(this, StylerObject);
 
 	        for (var prop in result) {
@@ -365,7 +368,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Styler;
 	})();
 
-	module.exports = new Styler();
+	module.exports = {
+	    Styler: new Styler(),
+	    StylerObject: StylerObject
+	};
 
 /***/ },
 /* 4 */

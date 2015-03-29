@@ -8,7 +8,7 @@ let styleTypeHandlers = {
         return entity;
     },
     isFunction(entity, collector) {
-        return entity(collector);
+        return entity(new StylerObject(collector));
     }, 
     isStyler(entity) {
         return entity();
@@ -105,7 +105,7 @@ let functionalMethods = {
 } 
 
 class StylerObject {
-    constructor(result, context) {
+    constructor(result) {
         for (let prop in result) {
             this[prop] = result[prop];
         }
@@ -167,4 +167,7 @@ class Styler {
     }
 }
 
-export default new Styler();
+export default {
+    Styler: new Styler(),
+    StylerObject: StylerObject
+}
