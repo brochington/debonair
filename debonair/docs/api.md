@@ -13,6 +13,7 @@
   - [get](#get)
   - [forIn](#forin)
   - [update](#update)
+- [Styler Object](#styler-object)
 - [Styler Object Methods](#styler-object-methods)
   - [toStyler](#tostyler)
 
@@ -69,18 +70,17 @@ myStyler();
 ```
 
 - Functions
-Note - an object that represents the current state of styles will be passed as an argument.
+
+It's important to note that the styles object passed into the function when it is called is a StylerObject. This means that you can call most Styler methods on it if needed. 
+
 ```
 let standardBox = Styler.create({
     height: 100,
     width: 100
 });
 
-let expandBox = styles => {
-    return {
-        width: styles.width + 100,
-        height: styler.height + 100
-    };
+let expandBox = currentStyles => {
+    return currentStyles.map(val => val + 100);
 };
 
 let biggerBox = Styler.create(standardBox, expandBox);
@@ -93,6 +93,8 @@ biggerBox();
 }
 */
 ```
+
+
 
 # Styler Instance
 Return an object suitable for use in the style property of react components. Accepts an indeterminate number of arguments. Output is the merged result of all arguments. Merge order is Left to right. 
@@ -271,12 +273,25 @@ let updatedStyles = styler.update({height: 125}, {backgroundColor: null});
 */
 ```
 
+# Styler Object
+
+A Styler Object is the type of object that is returned whenever you evaluate a Styler. It shares many
+of the same methods as Stylers, such as map, reduce, etc, and will always return a new instance of a Styler Object. You may also create a Styler Object without first creating and calling a Styler in the following manner:
+
+```
+import { StylerObject } from "debonair";
+
+let myStyleObject = new StylerObject({color: "blue"});
+```
+
+Right now a StylerObject will only accept a single object as an argument. If you would like to pass arguments into a stylerObject in the same manner as you would a Styler, use the merge method. 
+
 
 # Styler Object Methods
 
 The following Styler Methods are the same as on the Styler Object Methods: 
 
-`map, reduce, filter, get, forIn, merge`
+`map, reduce, filter, get, forIn, merge, update`
 
 ## toStyler 
 Convert the output of a styler directly into a new Styler. It is important to note that this method
