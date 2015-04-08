@@ -1,6 +1,9 @@
 import React from "react";
 import Boxes from "../Boxes";
-import {Debonair} from "debonair";
+import Basics from "../Basics";
+import {Debonair, components, DebonairApp} from "debonair";
+
+console.dir(DebonairApp);
 
 // create a new instance of Debonair.
 let debonair = new Debonair();
@@ -11,10 +14,11 @@ class Application extends React.Component {
     }
     render() {
         return (
-            <div>
-                <h1>Debonair Examples</h1>
-                <Boxes {...this.props} />
-            </div>
+            <DebonairApp>
+                    <h1>Debonair Examples</h1>
+                    <Boxes {...this.props} />
+                    <Basics {...this.props} />
+            </DebonairApp>
         );
     }
 };
