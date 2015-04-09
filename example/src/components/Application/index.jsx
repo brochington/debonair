@@ -1,6 +1,5 @@
 import React from "react";
 import Boxes from "../Boxes";
-import Basics from "../Basics";
 import {Debonair, components, DebonairApp} from "debonair";
 
 console.dir(DebonairApp);
@@ -17,7 +16,6 @@ class Application extends React.Component {
             <DebonairApp>
                     <h1>Debonair Examples</h1>
                     <Boxes {...this.props} />
-                    <Basics {...this.props} />
             </DebonairApp>
         );
     }
