@@ -1,26 +1,17 @@
 var webpack = require("webpack");
 
-var modulesExcludedFromBabelCompilation = [
-    "babel",
-    "babel-core",
-    "babel-loader",
-    "react",
-    "webpack",
-    "react",
-    "react-hot-loader",
-    "webpack-dev-server"
-];
-
 module.exports = {
-    entry: [
-        "webpack-dev-server/client?http:localhost:3000",
-        "webpack/hot/only-dev-server",
-        "./src/main"
-    ],
+    entry: {
+        app: [
+            "webpack-dev-server/client?http://localhost:3000",
+            "webpack/hot/dev-server",
+            "./src/main.jsx"
+        ]
+    },
     output: {
-        path: __dirname + '/build/',
-        filename: 'bundle.js',
-        publicPath: '/build/'
+        path: __dirname + "/build/",
+        publicPath: "/build/",
+        filename: "bundle.js"
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
@@ -30,13 +21,10 @@ module.exports = {
         extensions: ['', '.js', '.jsx']
     },
     module: {
-        loaders: [{ 
-            test: /\.jsx?$/, 
-            loaders: ['react-hot', 'babel'],
-            exclude: /node_modules.*(babel.*|babel-core.*|babel-loader.*|react.*|webpack.*|react.*|react-hot-loader.*|webpack-dev-server)/
+        loaders: [{
+            test: /\.jsx?$/,
+            loaders: ["react-hot", "babel-loader"],
+            exclude: /node_modules.*(babel-core.*|babel-loader.*|react.*|webpack.*|react.*|react-hot-loader.*|webpack-dev-server)/
         }]
     }
 }
-
-
-// exclude: new RegExp("node_modules.*(" + modulesExcludedFromBabelCompilation.join(".*|") + ")"),

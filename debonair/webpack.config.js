@@ -1,16 +1,5 @@
 var webpack = require("webpack");
 
-var modulesExcludedFromBabelCompilation = [
-    "babel",
-    "babel-core",
-    "babel-loader",
-    "react",
-    "webpack",
-    "react",
-    "react-hot-loader",
-    "webpack-dev-server"
-];
-
 module.exports = {
     entry: [
         "./src/main"

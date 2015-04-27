@@ -5,15 +5,13 @@
   "dependencies": {
     "debonair": "^0.0.1",
     "lodash": "^3.5.0",
-    "react": "^0.13.0"
+    "react": "^0.13.2"
   },
   "devDependencies": {
-    "babel": "^4.7.12",
-    "babel-core": "^4.7.12",
-    "babel-loader": "^4.2.0",
-    "react-hot-loader": "^1.2.3",
-    "webpack": "^1.7.3",
-    "webpack-dev-server": "^1.7.0"
+    "babel-loader": "^5.0.0",
+    "react-hot-loader": "^1.2.5",
+    "webpack": "^1.8.10",
+    "webpack-dev-server": "^1.8.2"
   },
   "scripts": {
     "start": "node server.js"
