@@ -1,8 +1,10 @@
 import _ from "lodash";
 
 class Debonair {
-    constructor() {
-        this.something = "else";
+    constructor(initConfig) {
+        if (initConfig.mediaQueries) {
+            this.mediaQueries = initConfig.mediaQueries
+        }
     }
 }
 

@@ -1,4 +1,16 @@
 import React from "react";
+import BoxPage from "../BoxPage";
+import Circles from "../Circles";
+import Random from "../Random";
+import FlexboxExample from "../FlexboxExample";
+import BouncingBoxes from "../BouncingBoxes";
+import { Debonair, Styler, DebonairApp } from "debonair";
+
+let debonairInstance = new Debonair({
+    mediaQueries: {
+        tablet: "(max-width: 768px)"
+    }
+});
 
 class Application extends React.Component {
     constructor(props) {
@@ -6,7 +18,12 @@ class Application extends React.Component {
     }
     render() {
         return (
-            <h1>Debonair Examples</h1>
+            <DebonairApp instance={debonairInstance}>
+                <Random />
+                <BoxPage />
+                <FlexboxExample />
+                <BouncingBoxes />
+            </DebonairApp>
         );
     }
 };

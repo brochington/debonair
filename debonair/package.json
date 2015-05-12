@@ -2,15 +2,23 @@
   "name": "debonair",
   "description": "A functional way to work with inline styles",
   "version": "0.0.13",
-  "main": "./build/bundle.js",
-  "keywords": ["inline styles", "react", "FP", "functional programming", "styles", "react-native"],
+  "main": "./src/main.js",
+  "keywords": [
+    "inline styles",
+    "react",
+    "FP",
+    "functional programming",
+    "styles",
+    "react-native"
+  ],
   "homepage": "https://github.com/brochington/debonair",
   "bugs": {
     "url": "https://github.com/brochington/debonair/issues",
     "email": "brochington@gmail.com"
   },
   "dependencies": {
-    "lodash": "^3.5.0"
+    "immutable": "^3.7.2",
+    "lodash": "^3.8.0"
   },
   "devDependencies": {
     "babel": "^4.7.12",
@@ -25,7 +33,7 @@
     "karma-webpack": "^1.5.0",
     "mocha": "^2.2.1",
     "react-hot-loader": "^1.2.3",
-    "webpack": "^1.7.3",
-    "webpack-dev-server": "^1.7.0"
+    "webpack": "1.8.11",
+    "webpack-dev-server": "1.8.2"
   }
 }
