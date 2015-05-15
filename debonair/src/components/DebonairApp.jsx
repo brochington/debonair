@@ -22,9 +22,11 @@ class DebonairApp extends React.Component {
     updateStyles(cssId, styles, ownerScope) {
         this.styleSheet.pushStyle({cssId: cssId, styles: styles, ownerScope: ownerScope});
 
-        this.updateStyleSheet();
+        // this.updateStyleSheet();
         if (!this.frameRequested) {
-            // this.cancelFrame = requestAnimationFrame(this.updateStyleSheet.bind(this));
+            // buffer calls and updates to stylesheets.
+            // console.time("callFrame");
+            this.cancelFrame = setTimeout(this.updateStyleSheet.bind(this), 4);
             this.frameRequested = true;
         }
     }
@@ -39,7 +41,10 @@ class DebonairApp extends React.Component {
         });
     }
     updateStyleSheet() {
+        // console.timeEnd("callFrame");
+        console.time("createStylesheets");
         this.stylesheetArr = this.styleSheet.createStylesheets();
+        console.timeEnd("createStylesheets");
         this.frameRequested = false;
         // calling this opens up the possiblity of a render loop issue
         // where child function is rendered, causing the parent to render, 

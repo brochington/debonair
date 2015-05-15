@@ -33,6 +33,10 @@ class BouncingBoxes extends React.Component {
         super(props);
         this.osc = 0;
         this.direction = "right";
+
+        this.state = {
+            boxCount: 20
+        };
     }
     render() {
         this.osc = this.direction == "right" ? this.osc + 5 : this.osc - 5;
@@ -44,14 +48,20 @@ class BouncingBoxes extends React.Component {
             this.direction = "right";
         }
 
+        let boxes = [];
+
+        for(let i = 0, l = this.state.boxCount; i<l;i++) {
+            boxes.push(<Div key={i} {...this.props} styles={box(greenBG, {left: this.osc + "px"})} />);
+            // boxes.push(<Div key={i} {...this.props} style={box(orangeBG, {left: this.osc + "px"})}/>);
+        }
+
         return (
             <div>
                 <div>Example of animation done by setting stylesheet prop, inline styles, or a combination of both.</div>
+                <div>Number of boxes: <span>{this.state.boxCount}</span></div>
+                <input type="number" value={this.state.boxCount} onChange={ev => this.setState({boxCount: ev.target.value})} />
                 <button onClick={this.props.toggleAnimation}>Start/Stop Animation</button>
-                <Div {...this.props} styles={box(greenBG, {left: this.osc + "px"})} />
-                <Div {...this.props} styles={box(purpleBG)} style={{left: this.osc + "px"}}/>
-                <Div {...this.props} style={box(orangeBG, {left: this.osc + "px"})}/>
-
+                {boxes}
             </div>
         );
     }
@@ -67,3 +77,6 @@ BouncingBoxes.defaultProps = {
 };
 
 export default BouncingBoxes;
+                // <Div {...this.props} styles={box(greenBG, {left: this.osc + "px"})} />
+                // <Div {...this.props} styles={box(purpleBG)} style={{left: this.osc + "px"}}/>
+                // <Div {...this.props} style={box(orangeBG, {left: this.osc + "px"})}/>

@@ -9,6 +9,9 @@ import { Debonair, Styler, DebonairApp } from "debonair";
 let debonairInstance = new Debonair({
     mediaQueries: {
         tablet: "(max-width: 768px)"
+    },
+    propHandlers: {
+        // same format as debonair propHandlers.
     }
 });
 
@@ -21,6 +24,7 @@ class Application extends React.Component {
             <DebonairApp instance={debonairInstance}>
                 <Random />
                 <BoxPage />
+                <Circles />
                 <FlexboxExample />
                 <BouncingBoxes />
             </DebonairApp>

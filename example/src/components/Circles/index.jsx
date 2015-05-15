@@ -26,7 +26,7 @@ class Circles extends React.Component {
     render() {
         let circles = [];
 
-        for(let i = 0; i<20;i++) {
+        for(let i = 0; i<200;i++) {
             let bgdColor = {backgroundColor: '#'+Math.floor(Math.random()*16777215).toString(16)};
 
             circles.push(<Div {...this.props} styles={circle(bgdColor)} key={`circle-${i}`}/>);

@@ -9,7 +9,7 @@ class Animator extends React.Component {
         super(props);
 
         this.state = {
-            animate: true
+            animate: false
         };
     }
     componentDidMount() {

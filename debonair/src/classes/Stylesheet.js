@@ -1,33 +1,11 @@
 import _ from "lodash";
 import Im from "immutable";
+import propHandlers from "./propHandlers";
 
 const states = [
     "hover",
     "active"
 ];
-
-const propHandlers = {
-    flex(stylesObj) {
-        let styles = stylesObj.flex;
-
-        return `-webkit-box-flex:${styles};-moz-box-flex:${styles};-webkit-flex:${styles};flex:${styles};`;
-    },
-    order(stylesObj) {
-        let styles = stylesObj.order;
-        return `-webkit-box-ordinal-group: ${styles};-moz-box-ordinal-group: ${styles};-ms-flex-order: ${styles};-webkit-order: ${styles};order: ${styles};`;
-    },
-    animate(stylesObj) {
-        let animationStyleString = "";
-        let styles = stylesObj.animate;
-        styles.name = styles.name;
-
-        for(let key in styles) {
-            animationStyleString += `animation-${_.kebabCase(key)}:${styles[key]}; `;
-        }
-
-        return animationStyleString;
-    }
-}
 
 class Stylesheet {
     constructor(debonairInstance) {
@@ -35,6 +13,7 @@ class Stylesheet {
         this.debonairInstance = debonairInstance;
         console.log(debonairInstance);
 
+        this.propHandlers = _.assign(propHandlers, this.debonairInstance.propHandlers);
     }
     pushStyle(styles) {
         this._styles = this._styles.setIn([styles.ownerScope, styles.cssId], styles.styles);
@@ -103,8 +82,8 @@ class Stylesheet {
                 }
             }
             if(!stateFlag && !queryFlag && !keyFrameFlag) {
-                if(propHandlers[key]) {
-                    stylesString += propHandlers[key](styles);
+                if(this.propHandlers[key]) {
+                    stylesString += this.propHandlers[key](styles, heading);
                 } else {
                     stylesString += `${_.kebabCase(key)}:${styles[key]};`;    
                 }

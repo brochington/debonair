@@ -15,8 +15,17 @@ let box = Styler.create({
     margin: "10px",
     display: "inline-block",
     hover: {
-        backgroundColor: "black"
+        backgroundColor: "black",
+        height: "150px"
+    },
+    transition: {
+        property: "background-color",
+        duration: "1s",
+        callback: (ev) => {
+            console.log("transition callback!!", ev);
+        }
     }
+    // transition: "all 1s"
 });
 
 class BoxPage extends React.Component {
@@ -29,7 +38,7 @@ class BoxPage extends React.Component {
     render() {
         let boxes = [];
 
-        for(let i = 0; i<5 ;i++) {
+        for(let i = 0; i<50 ;i++) {
             let bgdColor = {backgroundColor: '#'+Math.floor(Math.random()*16777215).toString(16)};
 
             boxes.push(<Div {...this.props} styles={box(bgdColor)}

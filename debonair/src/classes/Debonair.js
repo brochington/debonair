@@ -2,9 +2,8 @@ import _ from "lodash";
 
 class Debonair {
     constructor(initConfig) {
-        if (initConfig.mediaQueries) {
-            this.mediaQueries = initConfig.mediaQueries
-        }
+        this.mediaQueries = initConfig.mediaQueries
+        this.propHandlers = initConfig.propHandlers
     }
 }
 

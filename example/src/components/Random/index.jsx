@@ -14,7 +14,7 @@ let styles = {
     tablet: {
         color: "orange"
     },
-    animate: {
+    animation: {
         direction: "alternate",
         duration: "3s",
         iterationCount: "infinite",
